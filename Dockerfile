@@ -1,5 +1,6 @@
-FROM php:8.0.1-fpm
+FROM php:8.1-fpm
 
+RUN usermod -u 1000 www-data
 
 RUN apt-get update && apt-get install -y \
 	git \
@@ -21,6 +22,10 @@ RUN docker-php-ext-install  pdo_mysql mbstring exif pcntl bcmath gd
 WORKDIR /var/www
 
 
-COPY . .
+COPY --chown=www-data . .
 
-ENTRYPOINT ["./bash.sh"]
+RUN chmod -R 755 /var/www/storage
+
+RUN chmod -R 755 /var/www/bootstrap
+
+#ENTRYPOINT ["./bash.sh"]
